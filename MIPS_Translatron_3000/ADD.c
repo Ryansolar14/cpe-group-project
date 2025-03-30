@@ -107,7 +107,7 @@ void add_reg_bin(void) {
 
 
 	/*
-		Setting Instuciton values
+		Setting Instruction values
 	*/
 
 	setOp("ADD");
