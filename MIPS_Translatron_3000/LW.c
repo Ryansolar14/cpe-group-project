@@ -1,13 +1,18 @@
+/*
+* Modified by: Ryan Busch with assistance from GitHub Copilot
+* Date: 04/01/2025
+*/
+
 #include "Instruction.h"
 
 void lw_immd_assm(void) {
 	//Check that op code matches
 	// strcmp(string1, string2) return 0 if they match
 	if (strcmp(OP_CODE, "LW") != 0) {
-		// If the op code doesn't match, return wrong command
-		state = WRONG_COMMAND;
+		state = WRONG_COMMAND;// If the op code doesn't match, return wrong command
 		return;
 	}
+
 	/*
 		Checking the type of parameters
 	*/
@@ -34,7 +39,7 @@ void lw_immd_assm(void) {
 		Checking the value of parameters
 	*/
 
-	//check if registers 1 and 3 are valid (31 or less)
+	//Check if registers 1 and 3 are valid (31 or less)
 	if (PARAM1.value > 31) {
 		state = INVALID_REG;
 		return;
@@ -57,14 +62,13 @@ void lw_immd_assm(void) {
 	setBits_num(25, PARAM3.value, 5); //Set Rs
 	setBits_num(15, PARAM2.value, 16); //Set immediate value (imm16)
 
-	//Set the instruction to be completely encoded
-	state = COMPLETE_ENCODE;
+	state = COMPLETE_ENCODE; //Set state to reflect that the instruction has been encoded
 }
 
 
 void lw_immd_bin(void) {
 
-	//check op code 
+	//Check that opcode matches
 	if (checkBits(31, "100011") != 0) {
 		state = WRONG_COMMAND;
 		return;
@@ -83,12 +87,12 @@ void lw_immd_bin(void) {
 
 	setOp("LW"); // Set the op code to LW
 
+	//Set the parameters for the instruction
 	//setParam(param_num, param_type, param_value)
 	setParam(1, REGISTER, Rt);
 	setParam(3, REGISTER, Rs);
 	setParam(2, IMMEDIATE, imm16);
 	
-	//Tell system decoding is complete
-	state = COMPLETE_DECODE;
+	state = COMPLETE_DECODE; //Set state to reflect that the instruction has been decoded
 
 }
