@@ -5,14 +5,19 @@
 * MIPS-Translatron 3000
 */
 
+/*
+* Modified by: Ryan Busch with assistance from GitHub Copilot
+* Date: 04/01/2025
+*/
+
 #include "Instruction.h"
 
 void sub_reg_assm(void) {
 	// Checking that the op code matches
 	// strcmp(string1, string2) return 0 if they match
 	if (strcmp(OP_CODE, "SUB") != 0) {
-		// If the op code doesnt match, this isnt the correct command
-		state = WRONG_COMMAND;
+	
+		state = WRONG_COMMAND; //If the op code doesn't match, return wrong command
 		return; 
 	}
 
@@ -20,24 +25,23 @@ void sub_reg_assm(void) {
 		Checking the type of parameters
 	*/
 
-	// Generally the first parameter should always be a register
+	//The first parameter should be a register
 	if (PARAM1.type != REGISTER) {
 		state = MISSING_REG;
 		return;
 	}
 
-	// This is SUB register, so param 2 needs to be a register
+	//The second parameter should be a register
 	if (PARAM2.type != REGISTER) {
 		state = MISSING_REG;
 		return;
 	}
 
-	// This is SUB register, so param 3 needs to be a register
+	//The third parameter should be a register
 	if (PARAM3.type != REGISTER) {
 		state = MISSING_REG;
 		return;
 	}
-
 
 	/*
 		Checking the value of parameters
@@ -61,65 +65,52 @@ void sub_reg_assm(void) {
 		return;
 	}
 
-	
-
 	/*
-		Putting the binary together
+		Encoding instruction in binary
 	*/
 
-	// Set the opcode
-	setBits_num(31, 0, 6);
+	
+	setBits_num(31, 0, 6);// Set the opcode
+	setBits_str(5, "100010"); // Set the funct 
 
-	// Set the funct 
-	setBits_str(5, "100010");
+	setBits_num(15, PARAM1.value, 5); // set Rd
+	setBits_num(25, PARAM2.value, 5); // set Rs
+	setBits_num(20, PARAM3.value, 5); // set Rt
 
-	// set Rd
-	setBits_num(15, PARAM1.value, 5);
-
-	// set Rs
-	setBits_num(25, PARAM2.value, 5);
-
-	// set Rt
-	setBits_num(20, PARAM3.value, 5);
-
-	// tell the system the encoding is done
-	state = COMPLETE_ENCODE;
+	state = COMPLETE_ENCODE; //Set state to reflect that the instruction has been encoded
 }
 
 void sub_reg_bin(void) {
-	// Check if the op code bits match
-	// check_bits(start_bit, bit_string) returns 0 if the bit_string matches
-	// any x will be skipped
-	// If the manual shows (0), then the value of that bit doesnt matter
-	if (checkBits(31, "000000") != 0 || checkBits(5, "100100") != 0 ) {
+	// Check if the opcode and funct bits are correct
+	if (checkBits(31, "000000") != 0 || checkBits(5, "100010") != 0 ) {
 		state = WRONG_COMMAND;
 		return;
 	}
 
-	// If the op code bits match, then the rest can be read as correctly
+	// Read other inputs if opcode bits match
 
 	/*
 		Finding values in the binary
 	*/
+
 	// getBits(start_bit, width)
 	uint32_t Rd = getBits(15, 5);
 	uint32_t Rs = getBits(25, 5);
 	uint32_t Rt = getBits(20, 5);	
 
 	/*
-		Setting Instuciton values
+		Setting Instruction values
 	*/
 
-	setOp("SUB");
-	//setCond_num(cond);
+	setOp("SUB"); //setOpCode(0); //Set opcode to 0 for R-type instructions
+	
+	//Set the parameters for the instruction
 	//setParam(param_num, param_type, param_value)
 	setParam(1, REGISTER, Rd); //destination
 	setParam(2, REGISTER, Rs); //first source register operand
 	setParam(3, REGISTER, Rt); //second source register operand
 
-
-	// tell the system the decoding is done
-	state = COMPLETE_DECODE;
+	state = COMPLETE_DECODE; //Set state to reflect that the instruction has been decoded
 }
 
 

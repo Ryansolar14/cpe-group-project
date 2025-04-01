@@ -85,7 +85,11 @@ void lw_immd_bin(void) {
 	uint32_t Rt = getBits(20, 5);
 	uint32_t imm16 = getBits(15, 16);
 
-	setOp("LW"); // Set the op code to LW
+	/*
+		Setting Instruction values
+	*/
+
+	setOp("LW"); // Set the opcode to LW
 
 	//Set the parameters for the instruction
 	//setParam(param_num, param_type, param_value)

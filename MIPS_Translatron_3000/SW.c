@@ -16,6 +16,11 @@
 void sw_immd_assm(void) {
 	//Check that op code matches
 	// strcmp(string1, string2) return 0 if they match
+
+	/*
+		Checking the type of parameters
+	*/
+
 	if (strcmp(OP_CODE, "SW") != 0) {
 		state = WRONG_COMMAND; //If the op code doesn't match, return wrong command
 		return;
@@ -88,6 +93,10 @@ void sw_immd_bin(void) {
 	uint32_t Rs = getBits(25, 5);
 	uint32_t Rt = getBits(20, 5);
 	uint32_t offset = getBits(15, 16);
+
+	/*
+		Setting Instruction values
+	*/
 
 	setOp("SW"); //Set the opcode to SW
 
