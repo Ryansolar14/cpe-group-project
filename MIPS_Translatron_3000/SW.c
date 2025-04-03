@@ -12,99 +12,100 @@
 
 #include "Instruction.h"
 
-//Decodes sw to binary
+// Decodes SW to binary
 void sw_immd_assm(void) {
-	//Check that op code matches
-	// strcmp(string1, string2) return 0 if they match
+    // Checking that the op code matches
+    // strcmp returns 0 if they match, if not equal to zero the opcode does not match and error state is set
+    if (strcmp(OP_CODE, "SW") != 0) {
+        state = WRONG_COMMAND; // If the op code doesn't match, return wrong command
+        return;
+    }
 
-	/*
-		Checking the type of parameters
-	*/
+    /*
+        Checking the type of parameters
+    */
 
-	if (strcmp(OP_CODE, "SW") != 0) {
-		state = WRONG_COMMAND; //If the op code doesn't match, return wrong command
-		return;
-	}
+    // The first parameter should be a register
+    if (PARAM1.type != REGISTER) {
+        state = MISSING_REG; // Set state to MISSING_REG
+        return;
+    }
 
-	//First parameter should be a register
-	if (PARAM1.type != REGISTER) {
-		state = MISSING_REG;
-		return;
-	}
+    // In SW, the second parameter should be an immediate value
+    if (PARAM2.type != IMMEDIATE) {
+        state = INVALID_PARAM; // Set state to INVALID_PARAM
+        return;
+    }
 
-	//In SW, the second parameter is an immediate value
-	if (PARAM2.type != IMMEDIATE) {
-		state = INVALID_PARAM;
-		return;
-	}
+    // The third parameter should be a register
+    if (PARAM3.type != REGISTER) {
+        state = MISSING_REG; // Set state to MISSING_REG
+        return;
+    }
 
-	//Third parameter should be a register
-	if (PARAM3.type != REGISTER) {
-		state = MISSING_REG;
-		return;
-	}
+    /*
+        Checking the value of parameters
+    */
 
-	/*
-		Checking the value of parameters
-	*/
+    // Rt should be 31 or less
+    if (PARAM1.value > 31) {
+        state = INVALID_REG; // If the register value is out of bounds, set state to INVALID_REG
+        return;
+    }
 
-	//Check if registers 1 and 3 are valid (31 or less)
-	if (PARAM1.value > 31) {
-		state = INVALID_REG;
-		return;
-	}
-	if (PARAM3.value > 31) {
-		state = INVALID_REG;
-		return;
-	}
+    // Rs should be 31 or less
+    if (PARAM3.value > 31) {
+        state = INVALID_REG; // If the register value is out of bounds, set state to INVALID_REG
+        return;
+    }
 
-	//Check if intermediate value is valid
-	if (PARAM2.value > 0xFFFF) {
-		state = INVALID_IMMED;
-		return;
-	}
+    // The immediate value should be within the valid range
+    if (PARAM2.value > 0xFFFF) {
+        state = INVALID_IMMED; // If the immediate value is out of bounds, set state to INVALID_IMMED
+        return;
+    }
 
-	//Encode instruction
-	setBits_str(31, "101011"); //Set Opcode
+    /*
+        Encoding instruction in binary
+    */
 
-	setBits_num(20, PARAM1.value, 5); //Set Rt
-	setBits_num(25, PARAM3.value, 5); //Set Rs
-	setBits_num(15, PARAM2.value, 16); //Set immediate value
+    setBits_str(31, "101011"); // Set the opcode (SW opcode is 101011)
 
-	state = COMPLETE_ENCODE; //Set state to reflect that the instruction has been encoded
+    setBits_num(20, PARAM1.value, 5); // Set Rt
+    setBits_num(25, PARAM3.value, 5); // Set Rs
+    setBits_num(15, PARAM2.value, 16); // Set immediate value (imm16)
+
+    state = COMPLETE_ENCODE; // Set state to reflect that the instruction has been encoded
 }
 
-//Decodes binary to sw
+// Decodes binary to SW
 void sw_immd_bin(void) {
+    // Checking that the opcode matches
+    // checkBits returns 0 if the bit string matches, if not equal to zero the opcode does not match and error state is set
+    if (checkBits(31, "101011") != 0) {
+        state = WRONG_COMMAND; // If the opcode doesn't match, return wrong command
+        return;
+    }
 
-	//Check that opcode matches
-	if (checkBits(31, "101011") != 0) {
-		state = WRONG_COMMAND;
-		return;
-	}
+    /*
+        Finding values in the binary
+    */
 
-	//Read other inputs if opcode bits match
+    // getBits(start_bit, width)
+    uint32_t Rs = getBits(25, 5); // Fetch the Rs bits
+    uint32_t Rt = getBits(20, 5); // Fetch the Rt bits
+    uint32_t offset = getBits(15, 16); // Fetch the immediate value bits
 
-	/*
-		Finding values in the binary
-	*/
+    /*
+        Setting Instruction values
+    */
 
-	// getBits(start_bit, width)
-	uint32_t Rs = getBits(25, 5);
-	uint32_t Rt = getBits(20, 5);
-	uint32_t offset = getBits(15, 16);
+    setOp("SW"); // Set the operation to SW
 
-	/*
-		Setting Instruction values
-	*/
+    // Set the parameters for the instruction
+    setParam(1, REGISTER, Rt); // Set param 1 to destination register
+    setParam(3, REGISTER, Rs); // Set param 3 to base register
+    setParam(2, IMMEDIATE, offset); // Set param 2 to immediate value
 
-	setOp("SW"); //Set the opcode to SW
-
-	//Set the parameters for the instruction
-	// setParam(param_num, type, value)
-	setParam(1, REGISTER, Rt); 
-	setParam(3, REGISTER, Rs); 
-	setParam(2, IMMEDIATE, offset); 
-
-	state = COMPLETE_DECODE; //Set state to reflect that the instruction has been decoded
+    state = COMPLETE_DECODE; // Set state to reflect that the instruction has been decoded
 }
