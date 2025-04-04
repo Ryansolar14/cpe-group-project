@@ -109,8 +109,8 @@ void beq_immd_bin(void) {
 	setOp("BEQ");
 	//setCond_num(cond);
 	//setParam(param_num, param_type, param_value)
-	setParam(1, REGISTER, Rt); // destination
-	setParam(2, REGISTER, Rs); // source register operand
+	setParam(1, REGISTER, Rs); // destination
+	setParam(2, REGISTER, Rt); // source register operand
 	setParam(3, IMMEDIATE, offset); // immediate operand
 
 	// tell the system the decoding is done
