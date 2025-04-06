@@ -71,13 +71,13 @@ void slt_reg_assm(void) {
 	setBits_str(5, "101010");
 
 	// set Rd
-	setBits_num(20, PARAM1.value, 5);
+	setBits_num(20, PARAM3.value, 5);
 
 	// set Rs
 	setBits_num(25, PARAM2.value, 5);
 
 	// set Rt
-	setBits_num(15, PARAM3.value, 5);
+	setBits_num(15, PARAM1.value, 5);
 
 	// tell the system the encoding is done
 	state = COMPLETE_ENCODE;
