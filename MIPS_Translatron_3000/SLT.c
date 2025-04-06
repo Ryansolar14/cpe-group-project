@@ -104,12 +104,14 @@ void slt_reg_bin(void) {
 	uint32_t Rt = getBits(20, 5);
 
 	/*
-		Setting Instuciton values
+		Setting Instruction values
 	*/
 
 	setOp("SLT");
 	//setCond_num(cond);
+
 	//setParam(param_num, param_type, param_value)
+
 	setParam(1, REGISTER, Rd); //destination
 	setParam(2, REGISTER, Rs); //first source register operand
 	setParam(3, REGISTER, Rt); //second source register operand
