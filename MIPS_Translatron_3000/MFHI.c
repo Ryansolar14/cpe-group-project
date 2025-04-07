@@ -1,6 +1,13 @@
 #include "Instruction.h"
 
+/*
+* Modified by: Alex White
+* Date: 04/07/2025
+*/
+
 void mfhi_reg_assm(void) {
+	// Checking that the op code matches
+	// strcmp returns 0 if they match, if not equal to zero the opcode does not match and error state is set
 	if (strcmp(OP_CODE, "MFHI") != 0) {
 
 		state = WRONG_COMMAND;
@@ -13,17 +20,17 @@ void mfhi_reg_assm(void) {
 
 	// The only parameter should be a register
 	if (PARAM1.type != REGISTER) {
-		state = MISSING_REG;
+		state = MISSING_REG; //If the parameter type is not a register, set state to MISSING_REG
 		return;
 	}
 
 
 	/*
-		Checking the value of parameters
+		Checking the value of parameter
 	*/
 	// Rd should be 31 or less
 	if (PARAM1.value > 31) {
-		state = INVALID_REG;
+		state = INVALID_REG; // If the register value is out of bounds, set state to INVALID_REG
 		return;
 	}
 
@@ -36,7 +43,7 @@ void mfhi_reg_assm(void) {
 	setBits_num(15, PARAM1.value, 5);
 
 	// Set the funct 
-	setBits_str(5, "010010");
+	setBits_str(5, "010000"); //MFHI funct is 16 not 18
 	// set 25-16 as 0s 
 	setBits_str(21, "000000");
 	setBits_str(25, "000000");
@@ -52,7 +59,7 @@ void mfhi_reg_bin(void) {
 	// check_bits(start_bit, bit_string) returns 0 if the bit_string matches
 	//  any x will be skipped
 	// If the manual shows (0), then the value of that bit doesnt matter
-	if (checkBits(31, "000000") != 0 || checkBits(5, "010010") != 0 || checkBits(25, "0000000000") != 0 || checkBits(10, "00000") != 0) {
+	if (checkBits(31, "000000") != 0 || checkBits(5, "010000") != 0 /*16 not 18*/|| checkBits(25, "0000000000") != 0 || checkBits(10, "00000") != 0) {
 		state = WRONG_COMMAND;
 		return;
 	}
