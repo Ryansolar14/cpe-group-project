@@ -5,6 +5,8 @@
 * MIPS-Translatron 3000
 */
 
+// Implemented by Nicholas Bennett
+
 // dont get paid enough to implement
 
 #include "Instruction.h"
