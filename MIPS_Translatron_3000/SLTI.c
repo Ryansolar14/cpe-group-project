@@ -7,6 +7,8 @@
 
 // give this to the intern
 
+// Implemented by Nicholas Bennett
+
 #include "Instruction.h"
 
 void slti_immd_assm(void) {
