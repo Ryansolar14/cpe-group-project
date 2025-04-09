@@ -38,17 +38,13 @@ void mfhi_reg_assm(void) {
 	Putting the binary together
 	*/
 	// Set the opcode
-	setBits_str(31, "000000");
+	setBits_num(31, 0, 6);
+	
 	// set rd
 	setBits_num(15, PARAM1.value, 5);
 
 	// Set the funct 
 	setBits_str(5, "010000"); //MFHI funct is 16 not 18
-	// set 25-16 as 0s 
-	setBits_str(21, "000000");
-	setBits_str(25, "000000");
-	// set 10-6 as 0s 
-	setBits_str(10, "00000");
 
 	// tell the system the encoding is done
 	state = COMPLETE_ENCODE;

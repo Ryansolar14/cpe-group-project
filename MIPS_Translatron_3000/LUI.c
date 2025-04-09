@@ -51,10 +51,10 @@ void lui_immd_assm(void) {
 	}
 	
 
-	setBits_str(31, "001111");
-	setBits_str(20, "00000"); //always 00000
-	setBits_num(25, PARAM1.value, 5);
-	setBits_num(15, PARAM2.value, 16);
+	setBits_str(31, "001111"); //set opcode
+	setBits_num(20, PARAM1.value, 5); //set rt
+	/*    rs is not used so keep it 00000     */
+	setBits_num(15, PARAM2.value, 16); //set immediate
 
 	state = COMPLETE_ENCODE;
 }
