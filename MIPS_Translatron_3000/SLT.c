@@ -5,6 +5,8 @@
 * MIPS-Translatron 3000
 */
 
+// Nicholas Bennett
+
 #include "Instruction.h"
 
 void slt_reg_assm(void) {
